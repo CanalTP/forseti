@@ -6,7 +6,8 @@ services:
 - docker
 script:
 - export GO111MODULE=on
-- make setup linter-install
+  #- make setup linter-install
+- make linter-install
 - make ci
 - make
 after_success:
