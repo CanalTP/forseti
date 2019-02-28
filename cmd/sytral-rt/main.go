@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/url"
 	"os"
 	"strings"
@@ -23,8 +24,9 @@ type Config struct {
 	ParkingsRefresh time.Duration `mapstructure:"parkings-refresh"`
 	ParkingsURI     url.URL
 
-	JSONLog  bool   `mapstructure:"json-log"`
-	LogLevel string `mapstructure:"log-level"`
+	RelativePath bool   `mapstructure:"relative-path"`
+	JSONLog      bool   `mapstructure:"json-log"`
+	LogLevel     string `mapstructure:"log-level"`
 }
 
 func noneOf(args ...string) bool {
@@ -45,6 +47,7 @@ func GetConfig() (Config, error) {
 	pflag.Duration("parkings-refresh", 30*time.Second, "time between refresh of parkings data")
 	pflag.Bool("json-log", false, "enable json logging")
 	pflag.String("log-level", "debug", "log level: debug, info, warn, error")
+	pflag.Bool("relative-path", true, "convert uri path to relative path by removing leading /")
 	pflag.Parse()
 
 	var config Config
@@ -70,6 +73,14 @@ func GetConfig() (Config, error) {
 		if url, err := url.Parse(configURIStr); err != nil {
 			logrus.Errorf("Unable to parse data url: %s", configURIStr)
 		} else {
+			// Add default port if not set
+			if url.Port() == "" {
+				url.Host = fmt.Sprintf("%s:%d", url.Hostname(), 22)
+			}
+			// Hack to handle relative path in URL
+			if config.RelativePath {
+				url.Path = strings.TrimLeft(url.Path, "/")
+			}
 			*configURI = *url
 		}
 	}
