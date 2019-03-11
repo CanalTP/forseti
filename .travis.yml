@@ -16,6 +16,7 @@ after_success:
 - make docker
 - docker tag $REPO:$(make version) $REPO:$TAG
 - docker tag $REPO:$(make version) $REPO:travis-$TRAVIS_BUILD_NUMBER
+- if [ -n $TRAVIS_TAG ]; then  $REPO:$(make version) $REPO:$TRAVIS_TAG; fi
 - if [ -n "$DOCKER_USER" ] && [ -n "$DOCKER_PASS" ]; then docker login -u $DOCKER_USER -p $DOCKER_PASS && docker push $REPO; fi
 env:
   global:
