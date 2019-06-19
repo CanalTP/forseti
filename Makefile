@@ -6,7 +6,7 @@ linter-install: ## Install linter
 
 .PHONY: setup
 setup: ## Install all the build and lint dependencies
-	go get -u golang.org/x/tools/cmd/cover
+	go get -u -mod readonly golang.org/x/tools/cmd/cover
 
 .PHONY: test
 test: ## Run all the tests
@@ -33,7 +33,7 @@ ci: lint test ## Run all the tests and code checks
 
 .PHONY: build
 build: ## Build a version
-	CGO_ENABLED=0 go build -ldflags '-extldflags "-static"' -ldflags "-X github.com/CanalTP/sytralrt.SytralRTVersion=$(VERSION)" -tags=jsoniter -v ./cmd/...
+	CGO_ENABLED=0 go build -mod readonly -ldflags '-extldflags "-static"' -ldflags "-X github.com/CanalTP/sytralrt.SytralRTVersion=$(VERSION)" -tags=jsoniter -v ./cmd/...
 
 .PHONY: clean
 clean: ## Remove temporary files

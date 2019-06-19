@@ -9,6 +9,7 @@ script:
 - make setup linter-install
 - make ci
 - make
+- make version
 after_success:
 - export REPO=navitia/sytralrt
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
