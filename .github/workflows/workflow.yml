@@ -7,23 +7,20 @@ on:
       - master
 jobs:
   test:
-    strategy:
-      matrix:
-        go-version: [1.13.x]
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
+
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.15.x
 
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Prepare Env
         run: |
-          export GO111MODULE=on
+          export GO151MODULE=on
 
       - name: Install all the build and lint dependencies
         run: make setup
